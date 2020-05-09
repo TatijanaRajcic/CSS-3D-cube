@@ -1,0 +1,136 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+.scene {
+  width: 200px;
+  height: 200px;
+  border: 5px solid red;
+  margin: 80px;
+  perspective: 400px; /*the lower the perspective, the higher 3D effect. We could also remove it*/
+}
+
+.cube {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.cube__face {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border: 2px solid black;
+  line-height: 200px;
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}
+
+/* Colors */
+
+.cube__face--front,
+.cube__face2--front {
+  background: hsla(0, 100%, 50%, 0.7);
+}
+.cube__face--right,
+.cube__face2--right {
+  background: hsla(60, 100%, 50%, 0.7);
+}
+.cube__face--back,
+.cube__face2--back {
+  background: hsla(120, 100%, 50%, 0.7);
+}
+.cube__face--left,
+.cube__face2--left {
+  background: hsla(180, 100%, 50%, 0.7);
+}
+.cube__face--top,
+.cube__face2--top {
+  background: hsla(240, 100%, 50%, 0.7);
+}
+.cube__face--bottom,
+.cube__face2--bottom {
+  background: hsla(300, 100%, 50%, 0.7);
+}
+
+/* Positioning */
+
+/* THE ORDER MATTERS: doing the rotate AND THEN the translate explains why we are actually always using translateZ: 100px */
+/* First version */
+
+.cube__face--front {
+  transform: rotateY(0deg) translateZ(100px);
+}
+
+/* since the face rotates, every axis rotates with it too! So in thoses contexts, "translateZ(100px)" does not mean the same thing */
+.cube__face--right {
+  transform: rotateY(90deg) translateZ(100px);
+}
+/* ex: in the case we rotateY by 90deg, looking straight ahead means looking to the right of the screen, so that's where the Z axis is. That's why we need to add 100px on the Z axis to go to the right */
+
+.cube__face--back {
+  transform: rotateY(180deg) translateZ(100px);
+}
+/* ex: in the case we rotateY by 180deg, looking straight ahead means looking at the background of the screen, so that's where the Z axis is. That's why we need to add 100px on the Z axis to go to the bottom */
+
+.cube__face--left {
+  transform: rotateY(-90deg) translateZ(100px);
+}
+/* ex: in the case we rotateY by -90deg, looking straight ahead means looking at the left of the screen, so that's where the Z axis is. That's why we need to add 100px on the Z axis to go to the left */
+
+.cube__face--top {
+  transform: rotateX(90deg) translateZ(100px);
+}
+/* ex: in the case we rotateX by 90deg, looking straight ahead means looking at the top of the screen, so that's where the Z axis is. That's why we need to add 100px on the Z axis to go to the top */
+
+.cube__face--bottom {
+  transform: rotateX(-90deg) translateZ(100px);
+}
+/* ex: in the case we rotateX by -90deg, looking straight ahead means looking at the bottom of the screen, so that's where the Z axis is. That's why we need to add 100px on the Z axis to go to the bottom */
+
+/* 2nd version - My version */
+
+.cube__face2--front {
+  transform: translateZ(100px) rotateY(0deg);
+}
+.cube__face2--right {
+  transform: translateZ(0px) translateX(100px) rotateY(-90deg);
+}
+.cube__face2--back {
+  transform: translateZ(-100px) rotateY(180deg);
+}
+.cube__face2--left {
+  transform: translateZ(0px) translateX(-100px) rotateY(90deg);
+}
+.cube__face2--top {
+  transform: translateZ(0px) translateY(-100px) rotateX(90deg);
+}
+.cube__face2--bottom {
+  transform: translateZ(0px) translateY(100px) rotateX(-90deg);
+}
+
+.cube.is-backface-hidden .cube__face {
+  backface-visibility: hidden;
+}
+
+/* Animation to make it spine */
+
+.cube.is-spinning {
+  animation: spinCube 15s infinite ease-in-out;
+}
+
+@keyframes spinCube {
+  0% {
+    transform: translateZ(-100px) rotateX(0deg) rotateY(0deg);
+  }
+  100% {
+    transform: translateZ(-100px) rotateX(360deg) rotateY(360deg);
+  }
+}
